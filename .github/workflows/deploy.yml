@@ -1,0 +1,154 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+        
+      - name: Install dependencies (if package.json exists)
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+          else
+            echo "No package.json found - skipping npm install"
+          fi
+        
+      - name: Validate HTML
+        run: |
+          if command -v html5validator &> /dev/null; then
+            html5validator --root . --also-check-css
+          else
+            echo "Installing html5validator"
+            pip install html5validator
+            html5validator --root . --also-check-css
+          fi
+        
+      - name: Check CSS syntax
+        run: |
+          if [ -f styles.css ]; then
+            echo "Checking CSS syntax for styles.css"
+            node -e "
+              const fs = require('fs');
+              const css = fs.readFileSync('styles.css', 'utf8');
+              // Basic CSS syntax check
+              if (css.includes('/*') && !css.includes('*/')) {
+                console.error('Unclosed CSS comment found');
+                process.exit(1);
+              }
+              console.log('CSS syntax check passed');
+            "
+          fi
+        
+      - name: Validate JSON files
+        run: |
+          for file in *.json; do
+            if [ -f "$file" ]; then
+              echo "Validating $file"
+              node -e "
+                const fs = require('fs');
+                try {
+                  JSON.parse(fs.readFileSync('$file', 'utf8'));
+                  console.log('$file is valid JSON');
+                } catch (e) {
+                  console.error('$file is invalid JSON:', e.message);
+                  process.exit(1);
+                }
+              "
+            fi
+          done
+        
+      - name: Run tests (if test scripts exist)
+        run: |
+          if [ -f package.json ] && npm run | grep -q "test"; then
+            npm test
+          else
+            echo "No test scripts found - skipping tests"
+          fi
+        
+      - name: Build application (if build script exists)
+        run: |
+          if [ -f package.json ] && npm run | grep -q "build"; then
+            npm run build
+          else
+            echo "No build script found - using source files directly"
+            # Create a simple build directory with all necessary files
+            mkdir -p build
+            cp *.html build/ 2>/dev/null || true
+            cp *.css build/ 2>/dev/null || true
+            cp *.js build/ 2>/dev/null || true
+            cp *.json build/ 2>/dev/null || true
+            # Copy doc folder if it exists
+            if [ -d doc ]; then
+              cp -r doc build/
+            fi
+          fi
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          # Upload build directory if it exists, otherwise upload entire repository
+          path: |
+            ./build
+            ./
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+        
+      - name: Deployment successful
+        run: |
+          echo "🚀 Deployment completed successfully!"
+          echo "📱 Site URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "🔍 Check your deployment at the URL above"
+
+  # Notification job (optional)
+  notify:
+    runs-on: ubuntu-latest
+    needs: [build, deploy]
+    if: always() && github.ref == 'refs/heads/main'
+    steps:
+      - name: Notify deployment status
+        run: |
+          if [ "${{ needs.deploy.result }}" == "success" ]; then
+            echo "✅ Deployment succeeded"
+            echo "Site is now live at GitHub Pages"
+          else
+            echo "❌ Deployment failed"
+            echo "Check the workflow logs for details"
+          fi
