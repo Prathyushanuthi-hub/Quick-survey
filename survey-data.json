@@ -1,0 +1,68 @@
+{
+  "title": "Customer Experience Survey",
+  "description": "Help us improve our services by sharing your feedback",
+  "questions": [
+    {
+      "id": 1,
+      "type": "multiple-choice",
+      "title": "How would you rate your overall experience with our service?",
+      "description": "Please select the option that best describes your experience",
+      "options": [
+        "Excellent - Exceeded my expectations",
+        "Good - Met my expectations", 
+        "Fair - Somewhat met my expectations",
+        "Poor - Did not meet my expectations"
+      ],
+      "required": true
+    },
+    {
+      "id": 2,
+      "type": "rating",
+      "title": "How likely are you to recommend us to others?",
+      "description": "Rate from 1 (Not likely) to 10 (Very likely)",
+      "scale": 10,
+      "labels": {
+        "low": "Not likely",
+        "high": "Very likely"
+      },
+      "required": true
+    },
+    {
+      "id": 3,
+      "type": "multiple-choice",
+      "title": "What is the primary reason for your visit today?",
+      "description": "Select the main purpose of your interaction with us",
+      "options": [
+        "Product purchase",
+        "Customer support",
+        "Information inquiry",
+        "Product return/exchange",
+        "General browsing"
+      ],
+      "required": true
+    },
+    {
+      "id": 4,
+      "type": "text",
+      "title": "What could we do to improve your experience?",
+      "description": "Please share any suggestions or feedback that would help us serve you better",
+      "placeholder": "Enter your suggestions here...",
+      "required": false
+    },
+    {
+      "id": 5,
+      "type": "multiple-choice",
+      "title": "How did you hear about us?",
+      "description": "Help us understand how customers discover our services",
+      "options": [
+        "Social media",
+        "Search engine",
+        "Friend or family recommendation",
+        "Online advertisement",
+        "Word of mouth",
+        "Other"
+      ],
+      "required": true
+    }
+  ]
+}
