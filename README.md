@@ -14,6 +14,7 @@ An attractive, interactive survey application with minimum functionality built u
 - **Responsive Design**: Optimized for both desktop and mobile devices
 - **JSON Data Source**: Easy-to-modify survey questions stored in JSON format
 - **Results Summary**: Complete overview of all responses at completion
+- **Category Management**: Organize surveys with categories using CRUD API (requires backend server)
 
 ## Screenshots
 
@@ -36,11 +37,22 @@ An attractive, interactive survey application with minimum functionality built u
 
 ```
 Quick-survey/
-├── index.html          # Main HTML structure
-├── styles.css          # CSS styling and responsive design
-├── script.js           # JavaScript functionality
-├── survey-data.json    # Sample survey questions and configuration
-└── README.md          # Documentation
+├── index.html           # Main HTML structure
+├── styles.css           # CSS styling and responsive design
+├── script.js            # JavaScript functionality
+├── survey-data.json     # Sample survey questions and configuration
+├── categories.html      # Category management UI
+├── categories.js        # Category management JavaScript
+├── server.js            # Express.js backend server for Categories API
+├── package.json         # Node.js dependencies
+├── API.md              # Categories API documentation
+├── doc/                # Documentation folder
+│   ├── categories-planning.md
+│   ├── categories-design.md
+│   ├── categories-security-performance-accessibility.md
+│   ├── categories-architecture-diagrams.md
+│   └── categories-test-strategy.md
+└── README.md           # This file
 ```
 
 ## How to Use
@@ -52,22 +64,57 @@ Quick-survey/
 
 ## Running the App
 
-### Using Python (built-in server)
+### Option 1: Static Survey Only (GitHub Pages Compatible)
+
+For the basic survey functionality without category management:
+
+#### Using Python (built-in server)
 ```bash
 python3 -m http.server 8000
 # Open http://localhost:8000 in your browser
 ```
 
-### Using Node.js (if you have http-server installed)
+#### Using Node.js (if you have http-server installed)
 ```bash
 npx http-server -p 8000
 # Open http://localhost:8000 in your browser
 ```
 
-### Using VS Code Live Server
+#### Using VS Code Live Server
 1. Install the Live Server extension
 2. Right-click on `index.html`
 3. Select "Open with Live Server"
+
+### Option 2: Full Application with Categories (Requires Node.js)
+
+To use the category management features with the backend API:
+
+#### Prerequisites
+- Node.js (v14 or higher)
+- npm (comes with Node.js)
+
+#### Installation
+```bash
+# Install dependencies
+npm install
+```
+
+#### Running the Server
+```bash
+# Start the Express server
+npm start
+
+# Server will run on http://localhost:3000
+```
+
+#### Accessing the Application
+1. **Survey App**: Open http://localhost:3000/index.html
+2. **Category Management**: Open http://localhost:3000/categories.html
+
+The Express server provides:
+- Static file serving for all HTML/CSS/JS files
+- RESTful API for category management at `/api/categories`
+- CORS enabled for development
 
 ## Survey Configuration
 
@@ -114,6 +161,38 @@ The app is designed to be easily customizable:
 2. **Layout**: Adjust responsive breakpoints and spacing
 3. **Questions**: Update `survey-data.json` with your content
 4. **Functionality**: Extend `script.js` for additional features
+5. **Categories**: Use the Categories API to organize surveys (see `API.md`)
+
+## Categories Feature
+
+The application includes a comprehensive category management system with a RESTful API:
+
+### Features
+- **Create** categories with name, description, and color
+- **Read** all categories or individual category details
+- **Update** existing categories
+- **Delete** categories with confirmation
+- **Visual interface** for easy management
+- **Color coding** for visual organization
+
+### API Endpoints
+See [API.md](API.md) for complete API documentation.
+
+**Base URL**: `http://localhost:3000/api`
+
+- `GET /api/categories` - List all categories
+- `GET /api/categories/:id` - Get single category
+- `POST /api/categories` - Create new category
+- `PUT /api/categories/:id` - Update category
+- `DELETE /api/categories/:id` - Delete category
+
+### Documentation
+Comprehensive documentation is available in the `/doc` folder:
+- **Planning**: [categories-planning.md](doc/categories-planning.md)
+- **Design**: [categories-design.md](doc/categories-design.md)
+- **Security/Performance/Accessibility**: [categories-security-performance-accessibility.md](doc/categories-security-performance-accessibility.md)
+- **Architecture Diagrams**: [categories-architecture-diagrams.md](doc/categories-architecture-diagrams.md)
+- **Test Strategy**: [categories-test-strategy.md](doc/categories-test-strategy.md)
 
 ## License
 

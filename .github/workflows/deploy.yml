@@ -99,12 +99,16 @@ jobs:
             mkdir -p build
             cp *.html build/ 2>/dev/null || true
             cp *.css build/ 2>/dev/null || true
-            cp *.js build/ 2>/dev/null || true
-            cp *.json build/ 2>/dev/null || true
+            # Copy only client-side JavaScript
+            cp script.js build/ 2>/dev/null || true
+            # Note: server.js and categories.js are for local development only
+            cp survey-data.json build/ 2>/dev/null || true
             # Copy doc folder if it exists
             if [ -d doc ]; then
               cp -r doc build/
             fi
+            # Add a note about server-based features
+            echo "<!-- Note: Category management requires running the Node.js server locally -->" >> build/index.html
           fi
         
       - name: Setup Pages
