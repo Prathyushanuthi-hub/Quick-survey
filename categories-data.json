@@ -1,4 +1,37 @@
 {
-  "categories": [],
-  "nextId": 2
+  "categories": [
+    {
+      "id": 2,
+      "name": "Customer Feedback",
+      "description": "Updated description via API",
+      "color": "#667eea",
+      "createdAt": "2025-10-24T10:21:28.706Z",
+      "updatedAt": "2025-10-24T10:23:05.131Z"
+    },
+    {
+      "id": 3,
+      "name": "Product Research",
+      "description": "Market research and product development surveys",
+      "color": "#10b981",
+      "createdAt": "2025-10-24T10:21:28.713Z",
+      "updatedAt": "2025-10-24T10:21:28.713Z"
+    },
+    {
+      "id": 4,
+      "name": "Employee Engagement",
+      "description": "Internal surveys for employee satisfaction",
+      "color": "#f59e0b",
+      "createdAt": "2025-10-24T10:21:28.720Z",
+      "updatedAt": "2025-10-24T10:21:28.720Z"
+    },
+    {
+      "id": 5,
+      "name": "Event Feedback",
+      "description": "Post-event surveys and feedback collection",
+      "color": "#ef4444",
+      "createdAt": "2025-10-24T10:21:28.726Z",
+      "updatedAt": "2025-10-24T10:21:28.726Z"
+    }
+  ],
+  "nextId": 7
 }
